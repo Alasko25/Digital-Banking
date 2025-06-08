@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @SpringBootApplication
 public class DAOTest {
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
     }
 
@@ -57,5 +57,5 @@ public class DAOTest {
                 System.out.println("Type: " + acc.getClass().getSimpleName());
             });
         };
-    }
+    }*/
 }
