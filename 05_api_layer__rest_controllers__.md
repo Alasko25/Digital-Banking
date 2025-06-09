@@ -281,6 +281,6 @@ In this chapter, we learned about the **API Layer** and the role of **REST Contr
 
 With the API layer in place, our backend application now has defined ways for clients to access its functionality. However, making our banking operations available to the world means we need to control *who* can do *what*. In the next chapter, we will dive into **Security Configuration** for the backend to protect our application and data.
 
-[Next Chapter: Security Configuration (Backend)](06_security_configuration__backend_.md)
+[Next Chapter: Security Configuration (Backend)](06_security_configuration__backend__.md)
 
 ---
