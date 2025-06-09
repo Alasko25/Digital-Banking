@@ -1,6 +1,6 @@
 # Chapter 6: Security Configuration (Backend)
 
-Welcome back, future digital banker! In our journey so far, we've built the core pieces of our backend: we learned how to structure our data with [Entities](01_entities__data_models__.md), package it neatly with [DTOs](02_data_transfer_objects__dtos__.md), talk to the database using [Repositories](03_data_access_layer__repositories_.md), and implement the banking logic in [Services](04_business_logic_layer__services_.md). Finally, in the [previous chapter](05_api_layer__rest_controllers__.md), we created the [API Layer (REST Controllers)](05_api_layer__rest_controllers__.md) to expose our banking functions to the outside world.
+Welcome back, future digital banker! In our journey so far, we've built the core pieces of our backend: we learned how to structure our data with [Entities](01_entities__data_models__.md), package it neatly with [DTOs](02_data_transfer_objects__dtos__.md), talk to the database using [Repositories](03_data_access_layer__repositories__.md), and implement the banking logic in [Services](04_business_logic_layer__services__.md). Finally, in the [previous chapter](05_api_layer__rest_controllers__.md), we created the [API Layer (REST Controllers)](05_api_layer__rest_controllers__.md) to expose our banking functions to the outside world.
 
 But imagine this: we've just opened the doors to our banking system's API. Anyone could potentially try to access customer data, transfer money, or create accounts! That's a big problem!
 
@@ -28,7 +28,7 @@ Here's a simplified picture of how security works with JWT:
 5.  **Client Makes Subsequent Requests:** For any request to a **protected** API endpoint (e.g., `/customers`, `/accounts/123/history`), the client includes the JWT in the request header (like showing your ticket every time you try to enter a club area).
 6.  **Backend Validates JWT:** Spring Security intercepts the incoming request. It extracts the JWT from the header, verifies its signature (to ensure it's valid and hasn't been changed), and extracts the user's identity and permissions from the token.
 7.  **Backend Authorizes Request:** Based on the permissions found in the JWT and the security rules configured for the requested endpoint, Spring Security decides if the user is authorized to access that specific resource or perform that action.
-8.  **Request Proceeds or is Rejected:** If authorized, the request is allowed to proceed to our [API Controller](05_api_layer__rest_controllers__.md) and [Service Layer](04_business_logic_layer__services_.md). If not authorized, Spring Security rejects the request and sends an error response (like "401 Unauthorized" or "403 Forbidden") back to the client.
+8.  **Request Proceeds or is Rejected:** If authorized, the request is allowed to proceed to our [API Controller](05_api_layer__rest_controllers__.md) and [Service Layer](04_business_logic_layer__services__.md). If not authorized, Spring Security rejects the request and sends an error response (like "401 Unauthorized" or "403 Forbidden") back to the client.
 
 This ensures that only authenticated users with the correct permissions can access sensitive banking operations.
 
@@ -363,7 +363,7 @@ sequenceDiagram
 5.  Because the target method (`customers()`) has `@PreAuthorize("hasAuthority('SCOPE_USER')`), the `Filter Chain` (or a component it delegates to) uses the `Authorization Manager` to check if the authenticated user (from the JWT) has the `SCOPE_USER` authority.
 6.  If the user has the required authority, the request is allowed to proceed to the target method in the `CustomerRestController`.
 7.  The controller method calls the `BankAccountService`'s `listCostumers()` method.
-8.  The `Business Logic` fetches the data using the [Repositories](03_data_access_layer__repositories_.md) and database.
+8.  The `Business Logic` fetches the data using the [Repositories](03_data_access_layer__repositories__.md) and database.
 9.  The result ([List<CustomerDTO>](02_data_transfer_objects__dtos__.md)) is returned back through the layers.
 10. The API controller formats the result into JSON and sends the HTTP response back to the Frontend.
 
@@ -376,7 +376,7 @@ If the user *did not* have the `SCOPE_USER` authority, step 6 would result in an
 *   **Compliance:** Many applications, especially financial ones, have strict security requirements.
 *   **Integrity:** Protects against malicious actions that could corrupt data or disrupt service.
 
-By separating security concerns into `SecurityConfig` and using annotations like `@PreAuthorize`, our core business logic in the [Service layer](04_business_logic_layer__services_.md) and the data handling in the [Repositories](03_data_access_layer__repositories_.md) can remain focused on their primary tasks, without being cluttered by security checks.
+By separating security concerns into `SecurityConfig` and using annotations like `@PreAuthorize`, our core business logic in the [Service layer](04_business_logic_layer__services__.md) and the data handling in the [Repositories](03_data_access_layer__repositories__.md) can remain focused on their primary tasks, without being cluttered by security checks.
 
 ## Summary Table (Updated)
 
@@ -386,8 +386,8 @@ Let's update our summary table one last time to include Security:
 | :------------------------------- | :----------------------------------------------------------- | :------------------------------------------- | :-------------------------------------------- | :------------------------------------------------------ |
 | [Entities](01_entities__data_models__.md) | Blueprints for database tables & data structure              | Database                                     | Repositories, Services (internally)           | `@Entity`, `@Id`, `@OneToMany`, `@ManyToOne`            |
 | [DTOs](02_data_transfer_objects__dtos__.md) | Simple data packages for transfer                            | Other application layers (API, Frontend)     | Services (for input/output), API Layer        | Plain Java Classes, Lombok (`@Data`)                    |
-| [Repositories](03_data_access_layer__repositories_.md) | Access & manage data in the database                         | Database, Entities                           | Services                                      | `JpaRepository`, `@Query`                               |
-| [Services (Business Logic)](04_business_logic_layer__services_.md) | Implement core business rules & orchestrate                  | Repositories, DTOs, Entities                 | API Layer, other Services                     | `@Service`, `@Transactional`                            |
+| [Repositories](03_data_access_layer__repositories__.md) | Access & manage data in the database                         | Database, Entities                           | Services                                      | `JpaRepository`, `@Query`                               |
+| [Services (Business Logic)](04_business_logic_layer__services__.md) | Implement core business rules & orchestrate                  | Repositories, DTOs, Entities                 | API Layer, other Services                     | `@Service`, `@Transactional`                            |
 | [API Layer (Controllers)](05_api_layer__rest_controllers__.md) | Receive requests, delegate to Service, send response         | DTOs, Services                               | Frontend / Other Clients                      | `@RestController`, `@GetMapping`, `@PostMapping`, etc.  |
 | **Security Configuration**       | **Define access rules, authenticate users, authorize actions** | **AuthenticationManager, UserDetailsService, PasswordEncoder, JwtEncoder, JwtDecoder, API Layer** | **Spring Security Filter Chain (intercepts requests)** | **`@Configuration`, `@EnableWebSecurity`, `@EnableMethodSecurity`, `SecurityFilterChain`, `@Bean` methods (for components), `@PreAuthorize`** |
 
