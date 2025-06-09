@@ -1,6 +1,6 @@
 # Chapter 4: Business Logic Layer (Services)
 
-Welcome back to our `Digital-Banking` tutorial! In the [previous chapter](03_data_access_layer__repositories_.md), we learned about the **Data Access Layer (Repositories)** and how they provide a simple way for our application to talk to the database, fetching and saving our [Entities (Data Models)](01_entities__data_models__.md). Before that, we covered [Data Transfer Objects (DTOs)](02_data_transfer_objects__dtos__.md), the clean packages of data we use to move information around, especially to and from the frontend.
+Welcome back to our `Digital-Banking` tutorial! In the [previous chapter](03_data_access_layer__repositories__.md), we learned about the **Data Access Layer (Repositories)** and how they provide a simple way for our application to talk to the database, fetching and saving our [Entities (Data Models)](01_entities__data_models__.md). Before that, we covered [Data Transfer Objects (DTOs)](02_data_transfer_objects__dtos__.md), the clean packages of data we use to move information around, especially to and from the frontend.
 
 Now we have the database structure defined ([Entities](01_entities__data_models__.md)), the data messages ready ([DTOs](02_data_transfer_objects__dtos__.md)), and the tools to access the database ([Repositories](03_data_access_layer__repositories_.md)). But where does the actual *banking* happen? Where do we decide if a customer has enough money to withdraw? Where do we perform a transfer by debiting one account and crediting another?
 
