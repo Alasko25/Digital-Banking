@@ -267,26 +267,26 @@ Let's trace the journey of a request initiated by a Component asking for protect
 
 ```mermaid
 sequenceDiagram
-    participant Component
-    participant Frontend Service<br>(e.g., CustomerService)
-    participant HTTP Interceptor<br>(appHttpInterceptor)
-    participant Angular HttpClient
-    participant Internet
-    participant Backend API Layer
+    participant C as Component
+    participant FS as Frontend Service (CustomerService)
+    participant HI as HTTP Interceptor (appHttpInterceptor)
+    participant HC as Angular HttpClient
+    participant Net as Internet
+    participant API as Backend API Layer
 
-    Component->>Frontend Service<br>(e.g., CustomerService): Call getCustomers()
-    Frontend Service<br>(e.g., CustomerService)->>Angular HttpClient: Call http.get('/customers')
-    Angular HttpClient->>HTTP Interceptor<br>(appHttpInterceptor): Request is sent to interceptor
-    Note over HTTP Interceptor<br>(appHttpInterceptor): Gets JWT from AuthService<br/>Adds Authorization header
-    HTTP Interceptor<br>(appHttpInterceptor)->>Angular HttpClient: Pass modified request
-    Angular HttpClient->>Internet: Send HTTP Request<br/>(GET /customers with JWT header)
-    Internet->>Backend API Layer: Request Arrives
-    Note over Backend API Layer: Backend Security validates JWT<br/>Request proceeds to Controller/Service<br/>Backend processes and sends JSON response
-    Backend API Layer-->>Internet: HTTP Response (JSON data)
-    Internet-->>Angular HttpClient: Response Arrives
-    Angular HttpClient->>Frontend Service<br>(e.g., CustomerService): Convert JSON to Array<Customer><br/>Emit data through Observable
-    Frontend Service<br>(e.g., CustomerService)-->>Component: Observable emits Array<Customer>
-    Note over Component: Component subscribes to Observable<br/>Receives data and updates UI
+    C->>FS: Call getCustomers()
+    FS->>HC: http.get('/customers')
+    HC->>HI: Request is intercepted
+    Note over HI: Gets JWT from AuthService and adds Authorization header
+    HI->>HC: Pass modified request
+    HC->>Net: Send HTTP GET /customers with JWT
+    Net->>API: Request arrives
+    Note over API: JWT is validated, controller processes request, returns JSON
+    API-->>Net: HTTP Response (JSON)
+    Net-->>HC: Response arrives
+    HC->>FS: Convert JSON to Array<Customer>, emit through Observable
+    FS-->>C: Observable emits Array<Customer>
+    Note over C: Component subscribes and updates UI
 ```
 
 1.  A **Component** needs data (e.g., customer list). It calls the appropriate method on an injected **Frontend Service** (e.g., `customerService.getCustomers()`).
