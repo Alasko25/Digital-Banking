@@ -2,7 +2,7 @@
 
 Welcome back to our `Digital-Banking` tutorial! In the [previous chapter](03_data_access_layer__repositories__.md), we learned about the **Data Access Layer (Repositories)** and how they provide a simple way for our application to talk to the database, fetching and saving our [Entities (Data Models)](01_entities__data_models__.md). Before that, we covered [Data Transfer Objects (DTOs)](02_data_transfer_objects__dtos__.md), the clean packages of data we use to move information around, especially to and from the frontend.
 
-Now we have the database structure defined ([Entities](01_entities__data_models__.md)), the data messages ready ([DTOs](02_data_transfer_objects__dtos__.md)), and the tools to access the database ([Repositories](03_data_access_layer__repositories_.md)). But where does the actual *banking* happen? Where do we decide if a customer has enough money to withdraw? Where do we perform a transfer by debiting one account and crediting another?
+Now we have the database structure defined ([Entities](01_entities__data_models__.md)), the data messages ready ([DTOs](02_data_transfer_objects__dtos__.md)), and the tools to access the database ([Repositories](03_data_access_layer__repositories__.md)). But where does the actual *banking* happen? Where do we decide if a customer has enough money to withdraw? Where do we perform a transfer by debiting one account and crediting another?
 
 This is the responsibility of the **Business Logic Layer**, often implemented using **Services**.
 
@@ -10,13 +10,13 @@ This is the responsibility of the **Business Logic Layer**, often implemented us
 
 Think of the Business Logic Layer as the **brain** or the **command center** of our backend application. It's where the *rules* and *processes* of the banking system are implemented.
 
-If the [Repositories](03_data_access_layer__repositories_.md) are like the workers who can *fetch* or *store* specific items in the database vault, the Services are the **managers** who tell those workers what to do, when, and how, according to the bank's rules.
+If the [Repositories](03_data_access_layer__repositories__.md) are like the workers who can *fetch* or *store* specific items in the database vault, the Services are the **managers** who tell those workers what to do, when, and how, according to the bank's rules.
 
 The Service layer:
 
 1.  **Contains the Core Logic:** This is where the code for operations like "deposit money," "withdraw money," "transfer funds," "create a new account," or "list a customer's accounts" lives.
 2.  **Orchestrates Tasks:** A single banking operation might require multiple steps. For example, a transfer involves checking the source account, debiting it, crediting the destination account, and recording two operations. The Service layer coordinates all these steps.
-3.  **Uses Repositories:** Services *don't* talk directly to the database themselves. They rely on the [Repositories](03_data_access_layer__repositories_.md) to do the low-level data access work.
+3.  **Uses Repositories:** Services *don't* talk directly to the database themselves. They rely on the [Repositories](03_data_access_layer__repositories__.md) to do the low-level data access work.
 4.  **Works with DTOs:** Services often receive input data as [DTOs](02_data_transfer_objects__dtos__.md) (like a `CreditDTO` for a deposit) and return results as [DTOs](02_data_transfer_objects__dtos__.md) (like an `AccountHistoryDTO`). They are responsible for converting data between [Entities](01_entities__data_models__.md) (used internally with Repositories) and [DTOs](02_data_transfer_objects__dtos__.md) (used for communication with other layers, like the API).
 5.  **Handles Exceptions:** If something goes wrong (like trying to withdraw too much money), the Service layer is where this is detected and where specific errors ([Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/)) are thrown.
 
@@ -109,8 +109,8 @@ Let's trace how the `credit` (deposit) operation works in the Service layer. Thi
 Imagine a user wants to deposit $500 into account "ACC123".
 
 1.  The frontend sends a request to the backend.
-2.  The backend's [API Layer (REST Controllers)](05_api_layer__rest_controllers_.md) (which we'll see in [Chapter 5](05_api_layer__rest_controllers_.md)) receives this request. It might receive the data as a `CreditDTO`.
-3.  The [API Layer (REST Controllers)](05_api_layer__rest_controllers_.md) calls the `credit` method in our `BankAccountService`.
+2.  The backend's [API Layer (REST Controllers)](05_api_layer__rest_controllers__.md) (which we'll see in [Chapter 5](05_api_layer__rest_controllers__.md)) receives this request. It might receive the data as a `CreditDTO`.
+3.  The [API Layer (REST Controllers)](05_api_layer__rest_controllers__.md) calls the `credit` method in our `BankAccountService`.
 
 Here's the (simplified) code for the `credit` method:
 
@@ -155,16 +155,16 @@ Let's break this down:
 *   **Step 4: Apply the Rule.** It updates the `balance` field directly on the `bankAccount` **Entity** object in memory. This is where the core banking rule "balance increases by the deposited amount" is applied.
 *   **Step 5: Persist the Change.** It uses `bankAccountRepository.save(bankAccount)` to save the updated `BankAccount` **Entity** back to the database. Spring Data JPA knows this is an *existing* account (because it has an ID) and will update the corresponding row in the database table.
 
-This simple method demonstrates how the Service layer coordinates multiple steps (fetch, create, save, update, save again) using the [Repositories](03_data_access_layer__repositories_.md) to implement a single business operation.
+This simple method demonstrates how the Service layer coordinates multiple steps (fetch, create, save, update, save again) using the [Repositories](03_data_access_layer__repositories__.md) to implement a single business operation.
 
 ## Use Case: Getting Account History (`getAccountHistory`)
 
-This use case shows how the Service layer fetches data using [Repositories](03_data_access_layer__repositories_.md) and then converts it into [DTOs](02_data_transfer_objects__dtos__.md) before returning it.
+This use case shows how the Service layer fetches data using [Repositories](03_data_access_layer__repositories__.md) and then converts it into [DTOs](02_data_transfer_objects__dtos__.md) before returning it.
 
 Imagine a user wants to view the history for account "ACC123" on a specific page.
 
 1.  The frontend sends a request (e.g., GET /accounts/ACC123/history?page=0&size=10).
-2.  The [API Layer](05_api_layer__rest_controllers_.md) receives this request and calls the `getAccountHistory` method in our `BankAccountService`, passing the `accountId`, `page` number, and `size` (number of items per page).
+2.  The [API Layer](05_api_layer__rest_controllers__.md) receives this request and calls the `getAccountHistory` method in our `BankAccountService`, passing the `accountId`, `page` number, and `size` (number of items per page).
 
 Here's the (simplified) code for `getAccountHistory`:
 
@@ -211,7 +211,7 @@ Breakdown:
 *   **Step 5: Populate DTO.** It fills the `AccountHistoryDTO` with the list of `OperationDTO`s, the account ID and balance from the `BankAccount` Entity, and the pagination details obtained from the paginated query result (`accountOperations.getTotalPages()`).
 *   **Step 6: Return DTO.** The completed `AccountHistoryDTO` is returned. This DTO contains all the necessary data for the frontend, formatted cleanly and without including unnecessary Entity details or deep relationship graphs.
 
-This flow clearly shows the Service layer's role: fetch the necessary [Entities](01_entities__data_models__.md) using [Repositories](03_data_access_layer__repositories_.md), apply any required logic or data shaping, convert the results into appropriate [DTOs](02_data_transfer_objects__dtos__.md), and return the [DTOs](02_data_transfer_objects__dtos__.md).
+This flow clearly shows the Service layer's role: fetch the necessary [Entities](01_entities__data_models__.md) using [Repositories](03_data_access_layer__repositories__.md), apply any required logic or data shaping, convert the results into appropriate [DTOs](02_data_transfer_objects__dtos__.md), and return the [DTOs](02_data_transfer_objects__dtos__.md).
 
 ## Under the Hood: How Services Connect
 
@@ -247,7 +247,7 @@ sequenceDiagram
 2.  Because `BankAccountServiceImpl` is marked with `@Service` and implements `BankAccountService`, Spring intercepts the call and directs it to the corresponding method in `BankAccountServiceImpl`.
 3.  Inside the `BankAccountServiceImpl` method:
     *   It uses its injected `Repositories` to interact with the database, fetching or saving [Entities](01_entities__data_models__.md).
-    *   It uses its injected `dtoMapper` to convert [Entities](01_entities__data_models__.md) received from [Repositories](03_data_access_layer__repositories_.md) into [DTOs](02_data_transfer_objects__dtos__.md) to be returned, or converts input [DTOs](02_data_transfer_objects__dtos__.md) into [Entities](01_entities__data_models__.md) to be saved.
+    *   It uses its injected `dtoMapper` to convert [Entities](01_entities__data_models__.md) received from [Repositories](03_data_access_layer__repositories__.md) into [DTOs](02_data_transfer_objects__dtos__.md) to be returned, or converts input [DTOs](02_data_transfer_objects__dtos__.md) into [Entities](01_entities__data_models__.md) to be saved.
     *   It applies the specific business rules (e.g., balance check in `debit`, balance update in `credit`).
     *   It handles potential errors by throwing specific [Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/).
 4.  The `@Transactional` annotation ensures that all database interactions within that method are treated as a single atomic unit.
@@ -255,9 +255,9 @@ sequenceDiagram
 
 ## Why Services are Important
 
-*   **Separation of Concerns:** The Service layer is solely focused on implementing business rules, keeping them separate from data access details ([Repositories](03_data_access_layer__repositories_.md)) and communication details ([API Layer](05_api_layer__rest_controllers_.md), [DTOs](02_data_transfer_objects__dtos__.md)).
+*   **Separation of Concerns:** The Service layer is solely focused on implementing business rules, keeping them separate from data access details ([Repositories](03_data_access_layer__repositories_.md)) and communication details ([API Layer](05_api_layer__rest_controllers__.md), [DTOs](02_data_transfer_objects__dtos__.md)).
 *   **Reusability:** Business logic is defined once in the Service layer and can be called by different parts of the application (e.g., different API endpoints, or even scheduled jobs).
-*   **Testability:** Services can be unit tested independently of the database or the API. You can "mock" (simulate) the [Repositories](03_data_access_layer__repositories_.md) and [DTO Mappers](https://mapstruct.org/documentation/stable/reference/html/) to test the business logic in isolation.
+*   **Testability:** Services can be unit tested independently of the database or the API. You can "mock" (simulate) the [Repositories](03_data_access_layer__repositories__.md) and [DTO Mappers](https://mapstruct.org/documentation/stable/reference/html/) to test the business logic in isolation.
 *   **Transaction Management:** `@Transactional` simplifies handling complex database operations, ensuring data consistency.
 
 ## Summary Table
@@ -266,17 +266,17 @@ sequenceDiagram
 | :------------------------------- | :--------------------------------------------- | :------------------------------ | :------------------------------------------- | :------------------------------------------ |
 | [Entities](01_entities__data_models__.md) | Blueprints for database tables & data structure | Database                        | Repositories, Services (internally)          | `@Entity`, `@Id`, `@OneToMany`, `@ManyToOne` |
 | [DTOs](02_data_transfer_objects__dtos__.md) | Simple data packages for transfer          | Other application layers (API, Frontend) | Services (for input/output), API Layer       | Plain Java Classes, Lombok (`@Data`)        |
-| [Repositories](03_data_access_layer__repositories_.md) | Access & manage data in the database     | Database, Entities              | Services                                     | `JpaRepository`, `@Query`                   |
+| [Repositories](03_data_access_layer__repositories__.md) | Access & manage data in the database     | Database, Entities              | Services                                     | `JpaRepository`, `@Query`                   |
 | **Services (Business Logic)**    | **Implement core business rules & orchestrate** | **Repositories, DTOs, Entities** | **API Layer, other Services**                | **`@Service`, `@Transactional`**            |
 
-The Service layer is where everything comes together. It takes requests (often carrying [DTOs](02_data_transfer_objects__dtos__.md)), uses [Repositories](03_data_access_layer__repositories_.md) to manipulate [Entities](01_entities__data_models__.md) in the database according to the business rules, and prepares the response (often as [DTOs](02_data_transfer_objects__dtos__.md)).
+The Service layer is where everything comes together. It takes requests (often carrying [DTOs](02_data_transfer_objects__dtos__.md)), uses [Repositories](03_data_access_layer__repositories__.md) to manipulate [Entities](01_entities__data_models__.md) in the database according to the business rules, and prepares the response (often as [DTOs](02_data_transfer_objects__dtos__.md)).
 
 ## Conclusion
 
-In this chapter, we explored the **Business Logic Layer**, implemented through **Services**. We learned that Services are the central place for implementing the rules and operations of our banking application. We saw how they orchestrate tasks by using [Repositories](03_data_access_layer__repositories_.md) to interact with [Entities](01_entities__data_models__.md) in the database and use [DTOs](02_data_transfer_objects__dtos__.md) for data exchange. We walked through examples like making a deposit and getting account history to see these concepts in action, and discussed the importance of `@Service` and `@Transactional`.
+In this chapter, we explored the **Business Logic Layer**, implemented through **Services**. We learned that Services are the central place for implementing the rules and operations of our banking application. We saw how they orchestrate tasks by using [Repositories](03_data_access_layer__repositories__.md) to interact with [Entities](01_entities__data_models__.md) in the database and use [DTOs](02_data_transfer_objects__dtos__.md) for data exchange. We walked through examples like making a deposit and getting account history to see these concepts in action, and discussed the importance of `@Service` and `@Transactional`.
 
-Now that our backend has its data models ([Entities](01_entities__data_models__.md)), data transfer objects ([DTOs](02_data_transfer_objects__dtos__.md)), database access tools ([Repositories](03_data_access_layer__repositories_.md)), and core logic implementation ([Services]), how does the outside world (like a web browser or mobile app) actually *trigger* these operations? That's the role of the API Layer. In the next chapter, we'll learn about the **API Layer (REST Controllers)**.
+Now that our backend has its data models ([Entities](01_entities__data_models__.md)), data transfer objects ([DTOs](02_data_transfer_objects__dtos__.md)), database access tools ([Repositories](03_data_access_layer__repositories__.md)), and core logic implementation ([Services]), how does the outside world (like a web browser or mobile app) actually *trigger* these operations? That's the role of the API Layer. In the next chapter, we'll learn about the **API Layer (REST Controllers)**.
 
-[Next Chapter: API Layer (REST Controllers)](05_api_layer__rest_controllers_.md)
+[Next Chapter: API Layer (REST Controllers)](04_business_logic_layer__services__.md)
 
 ---
