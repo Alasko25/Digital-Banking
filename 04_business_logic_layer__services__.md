@@ -277,6 +277,6 @@ In this chapter, we explored the **Business Logic Layer**, implemented through *
 
 Now that our backend has its data models ([Entities](01_entities__data_models__.md)), data transfer objects ([DTOs](02_data_transfer_objects__dtos__.md)), database access tools ([Repositories](03_data_access_layer__repositories__.md)), and core logic implementation ([Services]), how does the outside world (like a web browser or mobile app) actually *trigger* these operations? That's the role of the API Layer. In the next chapter, we'll learn about the **API Layer (REST Controllers)**.
 
-[Next Chapter: API Layer (REST Controllers)](04_business_logic_layer__services__.md)
+[Next Chapter: API Layer (REST Controllers)](05_api_layer__rest_controllers__.md)
 
 ---
