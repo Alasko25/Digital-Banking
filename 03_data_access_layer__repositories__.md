@@ -81,7 +81,7 @@ You don't have to write any code for these! Spring Data JPA looks at your interf
 
 ### How is a Repository Used? (High Level)
 
-Other parts of your application, like the [Business Logic Layer (Services)](04_business_logic_layer__services_.md) (which we'll cover in the next chapter), will use these repositories. They don't interact *directly* with the database or write SQL. They *call methods* on the repository interface.
+Other parts of your application, like the [Business Logic Layer (Services)](04_business_logic_layer__services__.md) (which we'll cover in the next chapter), will use these repositories. They don't interact *directly* with the database or write SQL. They *call methods* on the repository interface.
 
 Imagine code in the Service layer wanting to find a customer:
 
