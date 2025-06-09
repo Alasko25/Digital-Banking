@@ -234,6 +234,6 @@ In this chapter, we explored the **Data Access Layer** and the role of **Reposit
 
 Now that we have our data models ([Entities](01_entities__data_models__.md)), our data transfer structures ([DTOs](02_data_transfer_objects__dtos__.md)), and the tools to access the database ([Repositories]), we have all the pieces to start building the actual features and logic of our banking application. In the next chapter, we will dive into the **Business Logic Layer (Services)**, where we'll use these repositories to implement operations like creating accounts, making deposits, and listing transactions.
 
-[Next Chapter: Business Logic Layer (Services)](04_business_logic_layer__services_.md)
+[Next Chapter: Business Logic Layer (Services)](04_business_logic_layer__services__.md)
 
 ---
