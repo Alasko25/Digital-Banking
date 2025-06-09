@@ -334,26 +334,26 @@ Let's visualize the path of a request for a protected resource (`/customers`) af
 
 ```mermaid
 sequenceDiagram
-    participant Frontend
-    participant API Layer<br>(@RestController)
-    participant Spring Security<br>Filter Chain
-    participant JWT Decoder
-    participant Authorization<br>Manager
-    participant Business Logic<br>(@Service)
-    participant Database
+    participant FE as Frontend
+    participant API as API Layer (@RestController)
+    participant SS as Spring Security Filter Chain
+    participant JD as JWT Decoder
+    participant AM as Authorization Manager
+    participant BL as Business Logic (@Service)
+    participant DB as Database
 
-    Frontend->>API Layer<br>(@RestController): GET /customers<br/>(Includes JWT in Header)
-    API Layer<br>(@RestController)-->>Spring Security<br>Filter Chain: Intercepted Request
-    Spring Security<br>Filter Chain->>JWT Decoder: Validate and Decode JWT
-    JWT Decoder-->>Spring Security<br>Filter Chain: Authentication Object<br/>(User, Authorities: USER)
-    Spring Security<br>Filter Chain->>Authorization<br>Manager: Check if user has 'SCOPE_USER' authority for this endpoint (@PreAuthorize)
-    Authorization<br>Manager-->>Spring Security<br>Filter Chain: Authorization GRANTED
-    Spring Security<br>Filter Chain-->>API Layer<br>(@RestController): Request allowed to proceed
-    API Layer<br>(@RestController)->>Business Logic<br>(@Service): Call listCustomers()
-    Business Logic<br>(@Service)->>Database: Fetch Customer Entities (via Repository)
-    Database-->>Business Logic<br>(@Service): Customer Data
-    Business Logic<br>(@Service)-->>API Layer<br>(@RestController): Return List<CustomerDTO>
-    API Layer<br>(@RestController)-->>Frontend: Send JSON response (List of CustomerDTOs)
+    FE->>API: GET /customers (JWT in Header)
+    API-->>SS: Request intercepted
+    SS->>JD: Decode and validate JWT
+    JD-->>SS: Authentication object (User, Authorities: USER)
+    SS->>AM: Check 'SCOPE_USER' authority (@PreAuthorize)
+    AM-->>SS: Authorization GRANTED
+    SS-->>API: Request allowed
+    API->>BL: listCustomers()
+    BL->>DB: Fetch customers from repository
+    DB-->>BL: Customer entities
+    BL-->>API: List<CustomerDTO>
+    API-->>FE: JSON response (List of CustomerDTOs)
 ```
 
 1.  The Frontend sends an HTTP GET request to `/customers`, including the previously received JWT in a header (usually `Authorization: Bearer <token>`).
