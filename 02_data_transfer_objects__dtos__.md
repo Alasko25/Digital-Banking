@@ -235,7 +235,7 @@ Let's trace the flow for getting account history, using our new `AccountHistoryD
 1.  The frontend (e.g., a web page) needs to display the history for a specific bank account (say, account "ACC123").
 2.  The frontend sends a request to the backend, asking for the history of "ACC123".
 3.  The backend receives this request in its API Layer (which we'll cover in [Chapter 5: API Layer (REST Controllers)](05_api_layer__rest_controllers__.md)).
-4.  The API Layer passes the request (specifically, the account ID "ACC123") to the Business Logic Layer (which we'll cover in [Chapter 4: Business Logic Layer (Services)](04_business_logic_layer__services_.md)).
+4.  The API Layer passes the request (specifically, the account ID "ACC123") to the Business Logic Layer (which we'll cover in [Chapter 4: Business Logic Layer (Services)](04_business_logic_layer__services__.md)).
 5.  The Business Logic Layer needs the actual data. It interacts with the [Data Access Layer (Repositories)](03_data_access_layer__repositories__.md) to fetch the `BankAccount` Entity for "ACC123" and its associated `Operation` Entities from the database.
 6.  The Business Logic Layer now has the Entity objects. It then **transforms** or **maps** the data from the `BankAccount` Entity and the `Operation` Entities into an `AccountHistoryDTO`. It populates the DTO's fields: setting the `accountId`, `balance`, pagination info, and creating a list of `OperationDTO`s from the `Operation` Entities.
 7.  The Business Logic Layer returns this `AccountHistoryDTO` to the API Layer.
@@ -264,7 +264,7 @@ sequenceDiagram
     Note over Frontend: Display data to user
 ```
 
-This diagram shows how the data flows and changes form. Entities are used within the backend layers that interact with the database ([Data Access Layer (Repositories)](03_data_access_layer__repositories__.md) and [Business Logic Layer (Services)](04_business_logic_layer__services_.md)). DTOs are used at the boundaries, like when the [API Layer (REST Controllers)](05_api_layer__rest_controllers_.md) communicates with the frontend, or when the [Business Logic Layer (Services)](04_business_logic_layer__services_.md) receives input from the API.
+This diagram shows how the data flows and changes form. Entities are used within the backend layers that interact with the database ([Data Access Layer (Repositories)](03_data_access_layer__repositories__.md) and [Business Logic Layer (Services)](04_business_logic_layer__services__.md)). DTOs are used at the boundaries, like when the [API Layer (REST Controllers)](05_api_layer__rest_controllers__.md) communicates with the frontend, or when the [Business Logic Layer (Services)](04_business_logic_layer__services__.md) receives input from the API.
 
 ## Why Use DTOs? A Quick Summary Table
 
